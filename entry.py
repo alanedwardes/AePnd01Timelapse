@@ -38,9 +38,8 @@ def handler(event, context):
     FFMPEG,
     '-framerate', '1/5',
     '-i', FRAMES_OUTPUT + '/%05d.jpg',
-    '-c:v' 'libx264',
-    '-r', '30',
     '-pix_fmt', 'yuv420p',
+    '-r', '30',
     VIDEO_OUTPUT
   ]
   
