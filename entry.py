@@ -22,6 +22,10 @@ def handler(event, context):
   
   print('Looping frame objects')
   for frame, object in enumerate(objects):
+    if object.size < 1024 * 16:
+      print('Skipping frame ' + object.key + ' as it\'s ' + str(object.size) + ' bytes')
+      continue
+  
     filename = FRAMES_OUTPUT + '/' + '{0:05d}'.format(frame) + '.jpg'
     print('Downloading frame ' + str(frame) + ' to ' + filename)
     bucket.download_file(object.key, filename)
