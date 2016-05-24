@@ -29,10 +29,6 @@ def handler(event, context):
     filename = FRAMES_OUTPUT + '/' + '{0:05d}'.format(frame) + '.jpg'
     print('Downloading frame ' + str(frame) + ' to ' + filename)
     bucket.download_file(object.key, filename)
-    
-    # only grab 100 while i'm debugging
-    if frame > 500:
-      break
 
   params = [
     FFMPEG,
@@ -51,4 +47,4 @@ def handler(event, context):
   print('ffmpeg stderr: ' + process.stderr.read())
   
   print('Uploading timelapse S3')
-  bucket.upload_file(VIDEO_OUTPUT, 'composite.mp4')
+  bucket.upload_file(VIDEO_OUTPUT, 'composite.mp4', extra_args={'ContentType': 'video/mp4'})
