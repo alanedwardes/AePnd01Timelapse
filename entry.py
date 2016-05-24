@@ -35,7 +35,7 @@ def handler(event, context):
     os.makedirs(FRAMES_OUTPUT)
   
   frame = 0
-  for object_batch in batch(objects, 10):
+  for object_batch in batch(objects, 50):
     print('Taking frame object batch')
     threads = []
     for object in object_batch:
@@ -49,7 +49,7 @@ def handler(event, context):
   params = [
     FFMPEG,
     '-y', # Overwrite old files
-    '-r', '30',
+    '-r', '10',
     '-vcodec', 'mjpeg',
     '-i', FRAMES_OUTPUT + '/%05d.jpg',
     '-vcodec', 'libx264',
