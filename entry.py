@@ -28,7 +28,7 @@ def download(frame, object):
 
 def handler(event, context):
   print('Querying bucket for frame objects')
-  objects = list(bucket.objects.filter(Prefix=PREFIX).all())[400:1000]
+  objects = list(bucket.objects.filter(Prefix=PREFIX).all())[400:10]
   
   if not os.path.exists(FRAMES_OUTPUT):
     print('Creating frames output directory')
