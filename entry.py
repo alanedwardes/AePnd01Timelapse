@@ -21,12 +21,9 @@ def handler(event, context):
     os.makedirs(FRAMES_OUTPUT)
   
   print('Looping frame objects')
-  for frame, object in enumerate(objects):
+  for frame, object in enumerate(objects, 400):
     if object.size < 1024 * 16:
       print('Skipping frame ' + object.key + ' as it\'s ' + str(object.size) + ' bytes')
-      continue
-    
-    if frame < 400:
       continue
     
     if frame > 1200:
