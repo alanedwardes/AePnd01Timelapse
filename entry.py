@@ -37,10 +37,10 @@ def handler(event, context):
   params = [
     FFMPEG,
     '-y', # Overwrite old files
-    '-framerate', '1/5',
+    '-r', '1',
+    '-vcodec', 'mjpeg',
     '-i', FRAMES_OUTPUT + '/%05d.jpg',
-    '-pix_fmt', 'yuv420p',
-    '-r', '30',
+    '-vcodec', 'libx264',
     VIDEO_OUTPUT
   ]
   
