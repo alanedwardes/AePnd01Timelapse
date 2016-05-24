@@ -1,2 +1,2 @@
-def lambda_handler(event, context):
+def handler(event, context):
   return 'hi'
