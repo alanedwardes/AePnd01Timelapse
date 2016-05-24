@@ -34,10 +34,12 @@ def handler(event, context):
     print('Creating frames output directory')
     os.makedirs(FRAMES_OUTPUT)
   
+  start = 0
   for object_batch in batch(objects, 10):
     print('Taking frame object batch')
     threads = []
-    for frame, object in enumerate(object_batch):
+    for object in object_batch:
+      start = start + 1
       thread = threading.Thread(target=download, args=(frame, object))
       thread.start()
       threads.append(thread)
