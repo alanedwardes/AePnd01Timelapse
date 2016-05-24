@@ -10,8 +10,6 @@ VIDEO_OUTPUT = '/tmp/sequence.mp4'
 s3 = boto3.resource('s3')
 
 def handler(event, context):
-  aws s3 cp myDir s3://mybucket/ --recursive
-
   bucket = s3.Bucket(BUCKET)
   objects = bucket.objects.filter(Prefix=PREFIX)
   
