@@ -18,17 +18,13 @@ def batch(iterable, n):
     yield iterable[ndx:min(ndx + n, l)]
 
 def download(frame, object):
-  if object.size < 1024 * 16:
-    print('Skipping frame ' + object.key + ' as it\'s ' + str(object.size) + ' bytes')
-    return
-
   filename = FRAMES_OUTPUT + '/' + '{0:05d}'.format(frame) + '.jpg'
   print('Downloading frame ' + str(frame) + ' to ' + filename)
   bucket.download_file(object.key, filename)
 
 def handler(event, context):
   print('Querying bucket for frame objects')
-  objects = list(bucket.objects.filter(Prefix=PREFIX).all())[400:1200]
+  objects = list(bucket.objects.filter(Prefix=PREFIX).all())[400:800]
   
   if not os.path.exists(FRAMES_OUTPUT):
     print('Creating frames output directory')
@@ -39,6 +35,10 @@ def handler(event, context):
     print('Taking frame object batch')
     threads = []
     for object in object_batch:
+      if object.size < 1024 * 16:
+        print('Skipping frame ' + object.key + ' as it\'s ' + str(object.size) + ' bytes')
+        return
+    
       frame = frame + 1
       thread = threading.Thread(target=download, args=(frame, object))
       thread.start()
