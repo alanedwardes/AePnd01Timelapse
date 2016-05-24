@@ -38,7 +38,9 @@ def handler(event, context):
     print('Taking frame object batch')
     threads = []
     for frame, object in enumerate(object_batch):
-      threads.append(threading.Thread(target=download, args=(frame, object)))
+      thread = threading.Thread(target=download, args=(frame, object))
+      thread.start()
+      threads.append(thread)
     for thread in threads:
       thread.join()
 
