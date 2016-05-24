@@ -1,1 +1,1 @@
-pip install -r requirements.txt -t .
+# do nothing for now, jenkins handles package stuff
