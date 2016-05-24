@@ -24,14 +24,14 @@ def download(frame, object):
 
 def handler(event, context):
   print('Querying bucket for frame objects')
-  objects = list(bucket.objects.filter(Prefix=PREFIX).all())[400:800]
+  objects = list(bucket.objects.filter(Prefix=PREFIX).all())[300:900]
   
   if not os.path.exists(FRAMES_OUTPUT):
     print('Creating frames output directory')
     os.makedirs(FRAMES_OUTPUT)
   
   frame = 0
-  for object_batch in batch(objects, 16):
+  for object_batch in batch(objects, 14):
     print('Taking frame object batch')
     threads = []
     for object in object_batch:
@@ -49,7 +49,7 @@ def handler(event, context):
   params = [
     FFMPEG,
     '-y', # Overwrite old files
-    '-r', '10',
+    '-r', '20',
     '-vcodec', 'mjpeg',
     '-i', FRAMES_OUTPUT + '/%05d.jpg',
     '-vcodec', 'libx264',
