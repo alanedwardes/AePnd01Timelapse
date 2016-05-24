@@ -28,11 +28,20 @@ def handler(event, context):
     
     # only grab 100 while i'm debugging
     if frame > 100:
-      pass
+      break
 
-  params = [FFMPEG, '-framerate 1/5', '-i ' + FRAMES_OUTPUT + '/%05d.jpg', '-c:v libx264', '-r 30', '-pix_fmt yuv420p', VIDEO_OUTPUT]
+  params = [
+    FFMPEG,
+    '-framerate', '1/5',
+    '-i', FRAMES_OUTPUT + '/%05d.jpg',
+    '-c:v' 'libx264',
+    '-r', '30',
+    '-pix_fmt', 'yuv420p',
+    VIDEO_OUTPUT
+  ]
+  
   print('Invoking ' + ' '.join(params))
-  process = subprocess.Popen(params, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  process = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   
   print('ffmpeg stdout: ' + process.stdout.read())
   
