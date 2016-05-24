@@ -50,4 +50,4 @@ def handler(event, context):
   
   print('ffmpeg stderr: ' + process.stderr.read())
   
-  print(os.path.exists(VIDEO_OUTPUT))
+  bucket.upload_file(VIDEO_OUTPUT, 'composite.mp4')
