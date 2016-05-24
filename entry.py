@@ -1,6 +1,5 @@
 import subprocess
 import boto3
-import stat
 import os
 
 FFMPEG = 'ffmpeg/ffmpeg'
@@ -16,9 +15,6 @@ def handler(event, context):
   
   print('Querying bucket for frame objects')
   objects = bucket.objects.filter(Prefix=PREFIX)
-  
-  print('Setting executable permision on ffmpeg')
-  os.chmod(FFMPEG, os.stat(FFMPEG).st_mode | stat.S_IEXEC)
   
   if not os.path.exists(FRAMES_OUTPUT):
     print('Creating frames output directory')
