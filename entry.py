@@ -1,5 +1,6 @@
 from subprocess import call
 import boto3
+import os
 
 FFMPEG = 'ffmpeg/ffmpeg'
 BUCKET = 'ae-raspberry'
@@ -21,4 +22,4 @@ def handler(event, context):
     
   call([FFMPEG, '-framerate 30', '-i ' + FRAMES_OUTPUT + '/%03d.jpg', '-c:v libx264', '-r 30', '-pix_fmt yuv420p', VIDEO_OUTPUT])
   
-  print os.file.exists(VIDEO_OUTPUT)
+  print os.path.exists(VIDEO_OUTPUT)
