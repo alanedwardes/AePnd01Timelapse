@@ -25,6 +25,12 @@ def handler(event, context):
     if object.size < 1024 * 16:
       print('Skipping frame ' + object.key + ' as it\'s ' + str(object.size) + ' bytes')
       continue
+    
+    if frame < 400:
+      continue
+    
+    if frame > 1200:
+      break
   
     filename = FRAMES_OUTPUT + '/' + '{0:05d}'.format(frame) + '.jpg'
     print('Downloading frame ' + str(frame) + ' to ' + filename)
