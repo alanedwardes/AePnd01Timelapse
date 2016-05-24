@@ -31,13 +31,13 @@ def handler(event, context):
     bucket.download_file(object.key, filename)
     
     # only grab 100 while i'm debugging
-    if frame > 100:
+    if frame > 500:
       break
 
   params = [
     FFMPEG,
     '-y', # Overwrite old files
-    '-r', '1',
+    '-r', '30',
     '-vcodec', 'mjpeg',
     '-i', FRAMES_OUTPUT + '/%05d.jpg',
     '-vcodec', 'libx264',
@@ -48,7 +48,7 @@ def handler(event, context):
   process = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   
   print('ffmpeg stdout: ' + process.stdout.read())
-  
   print('ffmpeg stderr: ' + process.stderr.read())
   
+  print('Uploading timelapse S3')
   bucket.upload_file(VIDEO_OUTPUT, 'composite.mp4')
