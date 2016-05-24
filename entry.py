@@ -62,7 +62,5 @@ def handler(event, context):
   print('ffmpeg stdout: ' + process.stdout.read())
   print('ffmpeg stderr: ' + process.stderr.read())
   
-  transfer = S3Transfer(client)
-  
   print('Uploading timelapse S3')
-  s3.meta.client.upload_file(VIDEO_OUTPUT, BUCKET, 'composite.mp4', extra_args={'ContentType': 'video/mp4'})
+  s3.upload_file(VIDEO_OUTPUT, BUCKET, 'composite.mp4', extra_args={'ContentType': 'video/mp4'})
