@@ -22,11 +22,15 @@ def handler(event, context):
   
   print('Looping frame objects')
   for frame, object in enumerate(objects):
-    filename = FRAMES_OUTPUT + '/' + '{0:03d}'.format(frame) + '.jpg'
+    filename = FRAMES_OUTPUT + '/' + '{0:05d}'.format(frame) + '.jpg'
     print('Downloading frame ' + str(frame) + ' to ' + filename)
     bucket.download_file(object.key, filename)
-  
-  params = [FFMPEG, '-framerate 30', '-i ' + FRAMES_OUTPUT + '/%03d.jpg', '-c:v libx264', '-r 30', '-pix_fmt yuv420p', VIDEO_OUTPUT]
+    
+    # only grab 100 while i'm debugging
+    if frame > 100:
+      pass
+
+  params = [FFMPEG, '-framerate 1/5', '-i ' + FRAMES_OUTPUT + '/%05d.jpg', '-c:v libx264', '-r 30', '-pix_fmt yuv420p', VIDEO_OUTPUT]
   print('Invoking ' + ' '.join(params))
   process = subprocess.Popen(params, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   
