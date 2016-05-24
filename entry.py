@@ -1,4 +1,4 @@
-from subprocess import call
+import subprocess
 import boto3
 import os
 
@@ -18,8 +18,10 @@ def handler(event, context):
     os.makedirs(FRAMES_OUTPUT)
   
   for frame, object in enumerate(objects):
-    object.download_file(FRAMES_OUTPUT + '/' + '{0:03d}'.format(frame) + '.jpg')
+    bucket.download_file(object.key, FRAMES_OUTPUT + '/' + '{0:03d}'.format(frame) + '.jpg')
     
-  call([FFMPEG, '-framerate 30', '-i ' + FRAMES_OUTPUT + '/%03d.jpg', '-c:v libx264', '-r 30', '-pix_fmt yuv420p', VIDEO_OUTPUT])
+  process = subprocess.Popen([FFMPEG, '-framerate 30', '-i ' + FRAMES_OUTPUT + '/%03d.jpg', '-c:v libx264', '-r 30', '-pix_fmt yuv420p', VIDEO_OUTPUT], shell=True, stdout=subprocess.PIPE)
+  print(process.stdout.read())
+  print(process.stderr.read())
   
   print os.path.exists(VIDEO_OUTPUT)
