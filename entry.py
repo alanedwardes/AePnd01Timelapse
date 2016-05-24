@@ -37,7 +37,7 @@ def handler(event, context):
     for object in object_batch:
       if object.size < 1024 * 16:
         print('Skipping frame ' + object.key + ' as it\'s ' + str(object.size) + ' bytes')
-        return
+        continue
     
       frame = frame + 1
       thread = threading.Thread(target=download, args=(frame, object))
