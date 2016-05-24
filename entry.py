@@ -53,4 +53,4 @@ def handler(event, context):
   print('ffmpeg stderr: ' + process.stderr.read())
   
   print('Uploading timelapse S3')
-  bucket.upload_file(VIDEO_OUTPUT, 'composite.mp4', extra_args={'ContentType': 'video/mp4'})
+  bucket.upload_file(VIDEO_OUTPUT, 'composite.mp4', Config={'ContentType': 'video/mp4'})
