@@ -9,7 +9,8 @@ PREFIX = 'pnd01/photos'
 FRAMES_OUTPUT = '/tmp/frames'
 VIDEO_OUTPUT = '/tmp/sequence.mp4'
 
-bucket = boto3.resource('s3').Bucket(BUCKET)
+s3 = boto3.resource('s3')
+bucket = s3.Bucket(BUCKET)
 
 def batch(iterable, n):
   l = len(iterable)
@@ -34,7 +35,7 @@ def handler(event, context):
     os.makedirs(FRAMES_OUTPUT)
   
   frame = 0
-  for object_batch in batch(objects, 50):
+  for object_batch in batch(objects, 20):
     print('Taking frame object batch')
     threads = []
     for object in object_batch:
@@ -61,5 +62,7 @@ def handler(event, context):
   print('ffmpeg stdout: ' + process.stdout.read())
   print('ffmpeg stderr: ' + process.stderr.read())
   
+  transfer = S3Transfer(client)
+  
   print('Uploading timelapse S3')
-  bucket.upload_file(VIDEO_OUTPUT, 'composite.mp4', Config={'ContentType': 'video/mp4'})
+  s3.meta.client.upload_file(VIDEO_OUTPUT, BUCKET, 'composite.mp4', extra_args={'ContentType': 'video/mp4'})
