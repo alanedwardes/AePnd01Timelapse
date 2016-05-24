@@ -35,7 +35,7 @@ def handler(event, context):
     os.makedirs(FRAMES_OUTPUT)
   
   frame = 0
-  for object_batch in batch(objects, 20):
+  for object_batch in batch(objects, 16):
     print('Taking frame object batch')
     threads = []
     for object in object_batch:
