@@ -1,4 +1,5 @@
 import subprocess
+import threading
 import boto3
 import os
 
@@ -8,10 +9,23 @@ PREFIX = 'pnd01/photos'
 FRAMES_OUTPUT = '/tmp/frames'
 VIDEO_OUTPUT = '/tmp/sequence.mp4'
 
-s3 = boto3.resource('s3')
+bucket = boto3.resource('s3').Bucket(BUCKET)
+
+def batch(iterable, n):
+  l = len(iterable)
+  for ndx in range(0, l, n):
+    yield iterable[ndx:min(ndx + n, l)]
+
+def download(frame, object):
+  if object.size < 1024 * 16:
+    print('Skipping frame ' + object.key + ' as it\'s ' + str(object.size) + ' bytes')
+    return
+
+  filename = FRAMES_OUTPUT + '/' + '{0:05d}'.format(frame) + '.jpg'
+  print('Downloading frame ' + str(frame) + ' to ' + filename)
+  bucket.download_file(object.key, filename)
 
 def handler(event, context):
-  bucket = s3.Bucket(BUCKET)
   
   print('Querying bucket for frame objects')
   objects = bucket.objects.filter(Prefix=PREFIX)
@@ -20,18 +34,13 @@ def handler(event, context):
     print('Creating frames output directory')
     os.makedirs(FRAMES_OUTPUT)
   
-  print('Looping frame objects')
-  for frame, object in enumerate(objects):
-    if object.size < 1024 * 16:
-      print('Skipping frame ' + object.key + ' as it\'s ' + str(object.size) + ' bytes')
-      continue
-    
-    if frame > 1200:
-      break
-  
-    filename = FRAMES_OUTPUT + '/' + '{0:05d}'.format(frame) + '.jpg'
-    print('Downloading frame ' + str(frame) + ' to ' + filename)
-    bucket.download_file(object.key, filename)
+  for batch in batch(objects, 10):
+    print('Taking frame batch')
+    threads = []
+    for frame, object in enumerate(batch):
+      threads.append(threading.Thread(target=download, args=(frame, object)))
+    for thread in threads:
+      thread.join()
 
   params = [
     FFMPEG,
