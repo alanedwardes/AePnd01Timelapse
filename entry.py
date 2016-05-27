@@ -1,11 +1,12 @@
 import subprocess
 import threading
+import datetime
 import boto3
 import os
 
 FFMPEG = 'ffmpeg/ffmpeg'
 BUCKET = 'ae-raspberry'
-PREFIX = 'pnd01/photos'
+PREFIX = os.path.join('pnd01/curated', datetime.datetime.now().strftime('%d-%b-%Y'))
 FRAMES_OUTPUT = '/tmp/frames'
 VIDEO_OUTPUT = '/tmp/sequence.mp4'
 
@@ -24,7 +25,7 @@ def download(frame, object):
 
 def handler(event, context):
   print('Querying bucket for frame objects')
-  objects = list(bucket.objects.filter(Prefix=PREFIX).all())[1200:1400]
+  objects = list(bucket.objects.filter(Prefix=PREFIX.all())
   
   if not os.path.exists(FRAMES_OUTPUT):
     print('Creating frames output directory')
@@ -35,10 +36,6 @@ def handler(event, context):
     print('Taking frame object batch')
     threads = []
     for object in object_batch:
-      if object.size < 1024 * 16:
-        print('Skipping frame ' + object.key + ' as it\'s ' + str(object.size) + ' bytes')
-        continue
-    
       frame = frame + 1
       thread = threading.Thread(target=download, args=(frame, object))
       thread.start()
@@ -63,4 +60,4 @@ def handler(event, context):
   print('ffmpeg stderr: ' + process.stderr.read())
   
   print('Uploading timelapse S3')
-  client.upload_file(VIDEO_OUTPUT, BUCKET, 'composite.mp4', ExtraArgs={'ContentType': 'video/mp4'})
+  client.upload_file(VIDEO_OUTPUT, BUCKET, 'timelapse.mp4', ExtraArgs={'ContentType': 'video/mp4'})
