@@ -60,4 +60,4 @@ def handler(event, context):
   print('ffmpeg stderr: ' + process.stderr.read())
   
   print('Uploading timelapse S3')
-  client.upload_file(VIDEO_OUTPUT, BUCKET, 'timelapse.mp4', ExtraArgs={'ContentType': 'video/mp4'})
+  client.upload_file(VIDEO_OUTPUT, BUCKET, os.path.join(PREFIX, 'timelapse.mp4'), ExtraArgs={'ContentType': 'video/mp4'})
