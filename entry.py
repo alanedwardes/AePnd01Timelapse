@@ -4,7 +4,7 @@ import datetime
 import boto3
 import os
 
-yesterday = datetime.datetime.now() #- datetime.timedelta(days=1)
+yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
 
 FFMPEG = 'ffmpeg/ffmpeg'
 BUCKET = 'ae-raspberry'
@@ -12,7 +12,7 @@ TOPIC = 'arn:aws:sns:eu-west-1:687908690092:AePnd01'
 PREFIX = os.path.join('pnd01/curated', yesterday.strftime('%d-%b-%Y'))
 FRAMES_OUTPUT = '/tmp/frames'
 VIDEO_OUTPUT = '/tmp/sequence.mp4'
-LINK_VALIDITY_DAYS = 7
+LINK_VALIDITY_DAYS = 14
 
 client = boto3.client('s3')
 sns = boto3.resource('sns')
