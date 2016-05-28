@@ -8,11 +8,15 @@ yesterday = datetime.datetime.now() #- datetime.timedelta(days=1)
 
 FFMPEG = 'ffmpeg/ffmpeg'
 BUCKET = 'ae-raspberry'
+TOPIC = 'arn:aws:sns:eu-west-1:687908690092:AePnd01'
 PREFIX = os.path.join('pnd01/curated', yesterday.strftime('%d-%b-%Y'))
 FRAMES_OUTPUT = '/tmp/frames'
 VIDEO_OUTPUT = '/tmp/sequence.mp4'
+LINK_VALIDITY_DAYS = 7
 
 client = boto3.client('s3')
+sns = boto3.resource('sns')
+topic = boto3.resource('sns').Topic(TOPIC)
 bucket = boto3.resource('s3').Bucket(BUCKET)
 
 def batch(iterable, n):
@@ -61,5 +65,14 @@ def handler(event, context):
   print('ffmpeg stdout: ' + process.stdout.read())
   print('ffmpeg stderr: ' + process.stderr.read())
   
+  timelapse = os.path.join(PREFIX, 'timelapse.mp4')
+  
   print('Uploading timelapse S3')
-  client.upload_file(VIDEO_OUTPUT, BUCKET, os.path.join(PREFIX, 'timelapse.mp4'), ExtraArgs={'ContentType': 'video/mp4'})
+  client.upload_file(VIDEO_OUTPUT, BUCKET, timelapse, ExtraArgs={'ContentType': 'video/mp4'})
+  
+  url = client.generate_presigned_url('get_object', Params = { 'Bucket': BUCKET, 'Key': timelapse }, ExpiresIn = 60 * 60 * 24 * LINK_VALIDITY_DAYS)
+  
+  topic.publish(
+      Message=url,
+      Subject='Pond Timelapse Available for ' + yesterday.strftime('%A %d %b %Y')
+  )
