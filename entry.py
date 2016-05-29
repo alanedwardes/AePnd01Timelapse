@@ -10,7 +10,7 @@ yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
 FFMPEG = 'ffmpeg/ffmpeg'
 BUCKET = 'ae-raspberry'
 TOPIC = 'arn:aws:sns:eu-west-1:687908690092:AePnd01'
-PREFIX = os.path.join('pnd01', 'curated', yesterday.strftime('%d-%b-%Y'))
+PREFIX = 'pnd01/curated/' + yesterday.strftime('%d-%b-%Y')
 FRAMES_OUTPUT = '/tmp/frames'
 VIDEO_OUTPUT = '/tmp/sequence.mp4'
 
