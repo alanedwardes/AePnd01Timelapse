@@ -65,7 +65,7 @@ def handler(event, context):
   print('ffmpeg stdout: ' + process.stdout.read())
   print('ffmpeg stderr: ' + process.stderr.read())
   
-  timelapse = os.path.join(PREFIX, uuid.uuid4().hex + '.mp4')
+  timelapse = PREFIX + '/' + uuid.uuid4().hex + '.mp4'
   
   print('Uploading timelapse S3')
   print(client.upload_file(VIDEO_OUTPUT, BUCKET, timelapse, ExtraArgs={
@@ -73,9 +73,7 @@ def handler(event, context):
     'ACL': 'public-read'
   }))
   
-  url = 'https://{0}.s3.amazonaws.com/{1}'.format(BUCKET, timelapse)
-  
   topic.publish(
-      Message=url,
+      Message='https://{0}.s3.amazonaws.com/{1}'.format(BUCKET, timelapse),
       Subject='Pond Timelapse Available for ' + yesterday.strftime('%A %d %b %Y')
   )
