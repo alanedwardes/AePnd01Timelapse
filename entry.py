@@ -81,7 +81,7 @@ def handler(event, context):
     'ACL': 'public-read'
   }))
   
-  #topic.publish(
-  #    Message='https://{0}.s3.amazonaws.com/{1}'.format(BUCKET, timelapse),
-  #    Subject='Pond Timelapse Available for ' + yesterday.strftime('%A %d %b %Y')
-  #)
+  topic.publish(
+      Message='https://{0}.s3.amazonaws.com/{1}'.format(BUCKET, timelapse),
+      Subject='Pond Timelapse Available for ' + yesterday.strftime('%A %d %b %Y')
+  )
