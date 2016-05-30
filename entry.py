@@ -31,9 +31,6 @@ def execute(params):
   stderr = process.stderr.read()
   print('stderr: ' + stderr)
   
-  if stderr:
-    raise Exception(stderr)
-  
   return stdout
 
 def batch(iterable, n):
