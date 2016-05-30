@@ -64,6 +64,7 @@ def handler(event, context):
     '-i', FRAMES_OUTPUT + '/%05d.jpg',
     '-preset', 'veryfast',
     '-c:v', 'libx264',
+    '-pix_fmt', 'yuv420p',
     '-profile:v', 'main',
     '-level', '3.1',
     '-err_detect', 'explode',
