@@ -1,6 +1,7 @@
 import subprocess
 import threading
 import datetime
+import shutil
 import boto3
 import uuid
 import os
@@ -11,8 +12,9 @@ FFMPEG = 'ffmpeg/ffmpeg'
 BUCKET = 'ae-raspberry'
 TOPIC = 'arn:aws:sns:eu-west-1:687908690092:AePnd01'
 PREFIX = 'pnd01/curated/' + yesterday.strftime('%d-%b-%Y')
-FRAMES_OUTPUT = '/tmp/frames'
-VIDEO_OUTPUT = '/tmp/sequence.mp4'
+TEMP = '/tmp'
+FRAMES_OUTPUT = TEMP + '/frames'
+VIDEO_OUTPUT = TEMP + '/sequence.mp4'
 
 client = boto3.client('s3')
 sns = boto3.resource('sns')
@@ -30,6 +32,9 @@ def download(frame, object):
   bucket.download_file(object.key, filename)
 
 def handler(event, context):
+  print('Clearing ' + TEMP)
+  shutil.rmtree(TEMP)
+  
   print('Querying bucket for frame objects')
   objects = list(bucket.objects.filter(Prefix=PREFIX).all())
   
@@ -56,7 +61,7 @@ def handler(event, context):
     '-vcodec', 'mjpeg',
     '-i', FRAMES_OUTPUT + '/%05d.jpg',
     '-vcodec', 'libx264',
-    '-preset', 'faster',
+    '-preset', 'veryfast',
     VIDEO_OUTPUT
   ]
   
