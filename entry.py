@@ -59,7 +59,7 @@ def handler(event, context):
     threads = []
     for object in object_batch:
       if os.path.splitext(object.key)[1].lower() not in ['.jpg', '.jpeg']:
-        print("Skipping {0}, it's not a frame", object.key)
+        print("Skipping {0}, it's not a frame".format(object.key))
         continue
       
       frame = frame + 1
@@ -91,7 +91,6 @@ def handler(event, context):
     'ACL': 'public-read'
   }))
   
-  # clean up
   execute(['rm', TEMP + '/*'])
   
   #topic.publish(
