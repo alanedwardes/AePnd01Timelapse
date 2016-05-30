@@ -33,37 +33,8 @@ def execute(params):
   
   return stdout
 
-def batch(iterable, n):
-  l = len(iterable)
-  for ndx in range(0, l, n):
-    yield iterable[ndx:min(ndx + n, l)]
-
-def download(frame, object):
-  filename = FRAMES_OUTPUT + '/' + '{0:05d}'.format(frame) + '.jpg'
-  print('Downloading frame ' + str(frame) + ' to ' + filename)
-  bucket.download_file(object.key, filename)
-
 def handler(event, context):
-  execute(['rm', TEMP + '/*'])
-  
-  print('Querying bucket for frame objects')
-  objects = list(bucket.objects.filter(Prefix=PREFIX).all())
-  
-  if not os.path.exists(FRAMES_OUTPUT):
-    print('Creating frames output directory')
-    os.makedirs(FRAMES_OUTPUT)
-  
-  frame = 0
-  for object_batch in batch(objects, 12):
-    print('Taking frame object batch')
-    threads = []
-    for object in object_batch:
-      frame = frame + 1
-      thread = threading.Thread(target=download, args=(frame, object))
-      thread.start()
-      threads.append(thread)
-    for thread in threads:
-      thread.join()
+  execute(['aws', 's3', 'cp', 's3://' + BUCKET + '/' + PREFIX, FRAMES_OUTPUT, '--recursive', '--exclude', '*', '--include', '*.jpg'])
 
   execute([
     FFMPEG,
@@ -86,6 +57,9 @@ def handler(event, context):
     'ContentType': 'video/mp4',
     'ACL': 'public-read'
   }))
+  
+  # clean up
+  execute(['rm', TEMP + '/*'])
   
   #topic.publish(
   #    Message='https://{0}.s3.amazonaws.com/{1}'.format(BUCKET, timelapse),
