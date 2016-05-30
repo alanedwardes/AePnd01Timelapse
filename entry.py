@@ -31,6 +31,9 @@ def execute(params):
   stderr = process.stderr.read()
   print('stderr: ' + stderr)
   
+  if stderr:
+    raise Exception(stderr)
+  
   return stdout
 
 def batch(iterable, n):
@@ -44,7 +47,8 @@ def download(frame, object):
   bucket.download_file(object.key, filename)
 
 def handler(event, context):
-  execute(['rm', TEMP + '/*'])
+  # clean up
+  execute(['find', TEMP, '-type', 'f', '-delete'])
   
   print('Querying bucket for frame objects')
   objects = list(bucket.objects.filter(Prefix=PREFIX).all())
@@ -91,7 +95,8 @@ def handler(event, context):
     'ACL': 'public-read'
   }))
   
-  execute(['rm', TEMP + '/*'])
+  # clean up
+  execute(['find', TEMP, '-type', 'f', '-delete'])
   
   #topic.publish(
   #    Message='https://{0}.s3.amazonaws.com/{1}'.format(BUCKET, timelapse),
