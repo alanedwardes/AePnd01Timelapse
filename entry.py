@@ -90,15 +90,15 @@ def handler(event, context):
   timelapse = PREFIX + '/' + uuid.uuid4().hex + '.mp4'
   
   print('Uploading timelapse S3')
-  print(client.upload_file(VIDEO_OUTPUT, BUCKET, timelapse, ExtraArgs={
+  client.upload_file(VIDEO_OUTPUT, BUCKET, timelapse, ExtraArgs={
     'ContentType': 'video/mp4',
     'ACL': 'public-read'
-  }))
+  })
   
   # clean up
   execute(['find', TEMP, '-type', 'f', '-delete'])
   
-  #topic.publish(
-  #    Message='https://{0}.s3.amazonaws.com/{1}'.format(BUCKET, timelapse),
-  #    Subject='Pond Timelapse Available for ' + yesterday.strftime('%A %d %b %Y')
-  #)
+  topic.publish(
+      Message='https://{0}.s3.amazonaws.com/{1}'.format(BUCKET, timelapse),
+      Subject='Pond Timelapse Available for ' + yesterday.strftime('%A %d %b %Y')
+  )
