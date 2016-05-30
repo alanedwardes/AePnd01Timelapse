@@ -58,16 +58,16 @@ def handler(event, context):
 
   params = [
     FFMPEG,
-    '-y', # Overwrite old files
-    '-r', '10', # Frame rate
-    '-vcodec', 'mjpeg',
-    '-i', FRAMES_OUTPUT + '/%05d.jpg',
-    '-preset', 'veryfast',
-    '-c:v', 'libx264',
-    '-pix_fmt', 'yuv420p',
-    '-profile:v', 'main',
-    '-level', '3.1',
-    '-err_detect', 'explode',
+    '-r', '10',                         # frame rate
+    '-vcodec', 'mjpeg',                 # input is jpeg
+    '-i', FRAMES_OUTPUT + '/%05d.jpg',  # frame dir
+    '-preset', 'veryfast',              # encode fast, not small
+    '-c:v', 'libx264',                  # codec
+    '-pix_fmt', 'yuv420p',              # apple preset
+    '-profile:v', 'main',               # apple preset
+    '-level', '3.1',                    # apple preset
+    '-movflags', '+faststart',          # quick start for streaming
+    '-err_detect', 'explode',           # blow up on errors
     VIDEO_OUTPUT
   ]
   
