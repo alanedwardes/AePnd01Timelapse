@@ -44,7 +44,7 @@ def download(frame, object):
   bucket.download_file(object.key, filename)
 
 def handler(event, context):
-  execute(['rm', TEMP + '/*']
+  execute(['rm', TEMP + '/*'])
   
   print('Querying bucket for frame objects')
   objects = list(bucket.objects.filter(Prefix=PREFIX).all())
