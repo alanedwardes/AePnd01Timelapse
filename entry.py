@@ -62,8 +62,8 @@ def handler(event, context):
     '-r', '10', # Frame rate
     '-vcodec', 'mjpeg',
     '-i', FRAMES_OUTPUT + '/%05d.jpg',
-    '-vcodec', 'libx264',
     '-preset', 'veryfast',
+    '-c:v', 'libx264',
     '-profile:v', 'main',
     '-level', '3.1',
     '-err_detect', 'explode',
