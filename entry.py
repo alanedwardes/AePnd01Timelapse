@@ -26,10 +26,12 @@ def execute(params):
   process = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   
   stdout = process.stdout.read()
-  print('stdout: ' + stdout)
+  if stdout:
+    print('stdout: ' + stdout)
   
   stderr = process.stderr.read()
-  print('stderr: ' + stderr)
+  if stderr:
+    print('stderr: ' + stderr)
   
   return stdout
 
