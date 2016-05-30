@@ -58,6 +58,10 @@ def handler(event, context):
     print('Taking frame object batch')
     threads = []
     for object in object_batch:
+      if os.path.splitext(object.key)[1] not in ['jpg', 'jpeg']:
+        print("Skipping {0}, it's not a frame", object.key)
+        continue
+      
       frame = frame + 1
       thread = threading.Thread(target=download, args=(frame, object))
       thread.start()
@@ -86,6 +90,9 @@ def handler(event, context):
     'ContentType': 'video/mp4',
     'ACL': 'public-read'
   }))
+  
+  # clean up
+  execute(['rm', TEMP + '/*'])
   
   #topic.publish(
   #    Message='https://{0}.s3.amazonaws.com/{1}'.format(BUCKET, timelapse),
