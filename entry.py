@@ -33,7 +33,9 @@ def download(frame, object):
 
 def handler(event, context):
   print('Clearing ' + TEMP)
-  shutil.rmtree(TEMP)
+  filelist = [f for f in os.listdir(TEMP)]
+  for f in filelist:
+      os.remove(f)
   
   print('Querying bucket for frame objects')
   objects = list(bucket.objects.filter(Prefix=PREFIX).all())
