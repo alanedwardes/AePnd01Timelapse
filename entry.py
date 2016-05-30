@@ -56,7 +56,7 @@ def handler(event, context):
     '-vcodec', 'mjpeg',
     '-i', FRAMES_OUTPUT + '/%05d.jpg',
     '-vcodec', 'libx264',
-    '-preset', 'ultrafast',
+    '-preset', 'fast',
     VIDEO_OUTPUT
   ]
   
