@@ -21,6 +21,18 @@ sns = boto3.resource('sns')
 topic = boto3.resource('sns').Topic(TOPIC)
 bucket = boto3.resource('s3').Bucket(BUCKET)
 
+def execute(params):
+  print('Invoking ' + ' '.join(params))
+  process = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  
+  stdout = process.stdout.read()
+  print('stdout: ' + stdout)
+  
+  stderr = process.stderr.read()
+  print('stderr: ' + stderr)
+  
+  return stdout
+
 def batch(iterable, n):
   l = len(iterable)
   for ndx in range(0, l, n):
@@ -32,10 +44,7 @@ def download(frame, object):
   bucket.download_file(object.key, filename)
 
 def handler(event, context):
-  print('Clearing ' + TEMP)
-  filelist = [f for f in os.listdir(TEMP)]
-  for f in filelist:
-      os.remove(f)
+  execute(['rm', TEMP + '/*']
   
   print('Querying bucket for frame objects')
   objects = list(bucket.objects.filter(Prefix=PREFIX).all())
@@ -56,7 +65,7 @@ def handler(event, context):
     for thread in threads:
       thread.join()
 
-  params = [
+  execute([
     FFMPEG,
     '-r', '10',                         # frame rate
     '-vcodec', 'mjpeg',                 # input is jpeg
@@ -68,13 +77,7 @@ def handler(event, context):
     '-level', '3.1',                    # apple preset
     '-err_detect', 'explode',           # blow up on errors
     VIDEO_OUTPUT
-  ]
-  
-  print('Invoking ' + ' '.join(params))
-  process = subprocess.Popen(params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-  
-  print('ffmpeg stdout: ' + process.stdout.read())
-  print('ffmpeg stderr: ' + process.stderr.read())
+  ])
   
   timelapse = PREFIX + '/' + uuid.uuid4().hex + '.mp4'
   
