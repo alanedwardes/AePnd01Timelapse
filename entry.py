@@ -80,6 +80,7 @@ def handler(event, context):
     '-pix_fmt', 'yuv420p',              # apple preset
     '-profile:v', 'main',               # apple preset
     '-level', '3.1',                    # apple preset
+    '-movflags', '+faststart',          # better for streaming
     '-err_detect', 'explode',           # blow up on errors
     VIDEO_OUTPUT
   ])
