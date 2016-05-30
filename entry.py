@@ -58,7 +58,7 @@ def handler(event, context):
     print('Taking frame object batch')
     threads = []
     for object in object_batch:
-      if os.path.splitext(object.key)[1] not in ['jpg', 'jpeg']:
+      if os.path.splitext(object.key)[1].lower() not in ['.jpg', '.jpeg']:
         print("Skipping {0}, it's not a frame", object.key)
         continue
       
