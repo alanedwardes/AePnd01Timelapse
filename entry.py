@@ -9,7 +9,6 @@ import os
 yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
 
 FFMPEG = 'ffmpeg/ffmpeg'
-AWS = '/usr/bin/aws'
 BUCKET = 'ae-raspberry'
 TOPIC = 'arn:aws:sns:eu-west-1:687908690092:AePnd01'
 PREFIX = 'pnd01/curated/' + yesterday.strftime('%d-%b-%Y')
@@ -35,8 +34,7 @@ def execute(params):
   return stdout
 
 def handler(event, context):
-  execute(['rm', TEMP + '/*'])
-  execute([AWS, 's3', 'cp', 's3://' + BUCKET + '/' + PREFIX, FRAMES_OUTPUT, '--recursive', '--exclude', '*', '--include', '*.jpg'])
+  execute(['aws', 's3', 'cp', 's3://' + BUCKET + '/' + PREFIX, FRAMES_OUTPUT, '--recursive', '--exclude', '*', '--include', '*.jpg'])
 
   execute([
     FFMPEG,
