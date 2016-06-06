@@ -6,7 +6,7 @@ import boto3
 import uuid
 import os
 
-yesterday = datetime.datetime.now()# - datetime.timedelta(days=1)
+yesterday = datetime.datetime.now()
 
 FFMPEG = 'ffmpeg/ffmpeg'
 BUCKET = 'ae-raspberry'
