@@ -74,7 +74,7 @@ def handler(event, context):
 
   execute([
     FFMPEG,
-    '-r', '10',                         # frame rate
+    '-r', str(5),                       # frame rate
     '-vcodec', 'mjpeg',                 # input is jpeg
     '-i', FRAMES_OUTPUT + '/%05d.jpg',  # frame dir
     '-preset', 'veryfast',              # encode fast, not small
