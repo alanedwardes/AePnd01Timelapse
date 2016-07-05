@@ -99,6 +99,6 @@ def handler(event, context):
   execute(['find', TEMP, '-type', 'f', '-delete'])
   
   topic.publish(
-      Message='https://{0}.s3.amazonaws.com/{1}'.format(BUCKET, timelapse),
+      Message='https://dyr1f5zlpdow5.cloudfront.net/{1}'.format(timelapse),
       Subject='Pond Timelapse Available for ' + yesterday.strftime('%A %d %b %Y')
   )
