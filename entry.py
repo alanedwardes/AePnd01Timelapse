@@ -6,7 +6,7 @@ import boto3
 import uuid
 import os
 
-yesterday = datetime.datetime.now()
+yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
 
 FFMPEG = 'ffmpeg/ffmpeg'
 BUCKET = 'ae-raspberry'
@@ -99,6 +99,6 @@ def handler(event, context):
   execute(['find', TEMP, '-type', 'f', '-delete'])
   
   topic.publish(
-      Message='https://dyr1f5zlpdow5.cloudfront.net/{1}'.format(timelapse),
+      Message='https://dyr1f5zlpdow5.cloudfront.net/{0}'.format(timelapse),
       Subject='Pond Timelapse Available for ' + yesterday.strftime('%A %d %b %Y')
   )
