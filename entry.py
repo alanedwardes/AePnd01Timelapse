@@ -11,7 +11,8 @@ yesterday = datetime.datetime.now()# - datetime.timedelta(days=1)
 FFMPEG = 'ffmpeg/ffmpeg'
 BUCKET = 'ae-raspberry'
 TOPIC = 'arn:aws:sns:eu-west-1:687908690092:AePnd01'
-PREFIX = 'pnd01/curated/' + yesterday.strftime('%d-%b-%Y')
+VIDEO_PREFIX = 'pnd01/composite'
+FRAME_PREFIX = 'pnd01/curated/' + yesterday.strftime('%d-%b-%Y')
 TEMP = '/tmp'
 FRAMES_OUTPUT = TEMP + '/frames'
 VIDEO_OUTPUT = TEMP + '/sequence.mp4'
@@ -50,7 +51,7 @@ def handler(event, context):
   execute(['find', TEMP, '-type', 'f', '-delete'])
   
   print('Querying bucket for frame objects')
-  objects = list(bucket.objects.filter(Prefix=PREFIX).all())
+  objects = list(bucket.objects.filter(Prefix=FRAME_PREFIX).all())
   
   if not os.path.exists(FRAMES_OUTPUT):
     print('Creating frames output directory')
@@ -87,7 +88,7 @@ def handler(event, context):
     VIDEO_OUTPUT
   ])
   
-  timelapse = PREFIX + '/' + uuid.uuid4().hex + '.mp4'
+  timelapse = VIDEO_PREFIX + '/' + uuid.uuid4().hex + '.mp4'
   
   print('Uploading timelapse S3')
   client.upload_file(VIDEO_OUTPUT, BUCKET, timelapse, ExtraArgs={
